@@ -1,8 +1,8 @@
-function GameManager(size, InputManager, Actuator, ScoreManager) {
+function GameManager(size, InputManager, Actuator, StorageManager) {
   this.size         = size; // Size of the grid
-  this.inputManager = new InputManager;
-  this.scoreManager = new ScoreManager;
-  this.actuator     = new Actuator;
+  this.inputManager   = new InputManager;
+  this.storageManager = new StorageManager;
+  this.actuator       = new Actuator;
 
   this.startTiles   = 2;
 
@@ -68,15 +68,15 @@ GameManager.prototype.addRandomTile = function () {
 
 // Sends the updated grid to the actuator
 GameManager.prototype.actuate = function () {
-  if (this.scoreManager.get() < this.score) {
-    this.scoreManager.set(this.score);
+  if (this.storageManager.get() < this.score) {
+    this.storageManager.set(this.score);
   }
 
   this.actuator.actuate(this.grid, {
     score:      this.score,
     over:       this.over,
     won:        this.won,
-    bestScore:  this.scoreManager.get(),
+    bestScore:  this.storageManager.get(),
     terminated: this.isGameTerminated()
   });
 
@@ -153,7 +153,7 @@ GameManager.prototype.move = function (direction) {
           // Update the score
           self.score += merged.value;
 
-          // The mighty 2048 tile
+          // The mighty 3x3x3 tile
           if (merged.value === 81) self.won = true;
         }
         
